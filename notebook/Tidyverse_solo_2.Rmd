@@ -1,0 +1,106 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+
+1. Read in `districts.csv` into a tibble named `districts`.
+```{r}
+ districts <- read_csv("../data/districts.csv")
+```
+
+2. Notice that the first row corresponds to the whole State of Tennessee. Remove this row and save the result back to `districts`.
+```{r}
+districts <-
+  districts |> 
+filter(!row_number() %in% c(1))
+```
+```{r}
+
+districts |> 
+  head(5)
+```
+3. How many districts have a proficiency rate of at least 80% for both alg_1 and eng_1?
+```{r}
+districts |> 
+  filter(alg_1 > 80 & eng_1 > 80) 
+```
+13 districts has a proficiency rate of at least 80% for both alg_1 and eng_1.
+
+4. How many districts have a proviciency rate less than 50% for either alg_1 or eng_1?
+```{r}
+districts |> 
+  filter(alg_1 < 50 | eng_1 < 50) 
+```
+8 districts have a proviciency rate less than 50% for either alg_1 or eng_1.
+
+5. Which district has the lowest graduation rate?
+```{r}
+districts |> 
+  arrange(grad)
+```
+Tenn School for Blind has the lowest graduation rate.
+```{r}
+districts |> 
+  slice_min(grad)
+```
+
+6. Within the Mid Cumberland region, which district has the highest ACT composite?
+```{r}
+districts |> 
+  filter(region == "Mid Cumberland") |> 
+  arrange(desc(act_composite))
+```
+Within the Mid Cumberland region, Williamson County has the highest ACT composite. 
+
+7. Create a scatter plot to compare alg_1 proficiency rates to alg_2 rates. What do you notice? Facet this plot by region. Does anything stand out when you facet the plots?
+```{r}
+districts |> 
+ggplot(aes(x = alg_1, y = alg_2)) +
+  geom_point()
+```
+
+8. When creating this bar chart you may have noticed that some districts have missing enrollment values. For how many districts is this the case?
+```{r}
+
+```
+
+9. A lot of rows are missing additional values. Which district has the largest number of missing values (across all variables)? Hint: you might want to look at rowwise and c_across to answer this question.
+```{r}
+
+```
+
+10. What is the mean graduation rate across all districts? What might be wrong with using just the regular mean to assess average graduation rates?
+```{r}
+
+```
+
+11. Redo the previous question but use a weighted average (`weighted.mean`) graduation across all districts, weighing by enrollment. How much does this change your answer? Can you explain using the data the reason for the big change from using the mean?
+```{r}
+
+```
+
+12. Find the unweighted and weighted average graduation rate by district.
+```{r}
+
+```
+
+
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
